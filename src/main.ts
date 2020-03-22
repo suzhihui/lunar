@@ -1,3 +1,5 @@
+import CacheUtil from "./util"
+
 // 创建日期数据
 const creatLenArr = (year:number, month:number, len:number, start:number = 0) => {
   let arr:Array<any> = []
@@ -243,5 +245,32 @@ function isLeapYear(year:number):boolean{
 function getSolarMonthDays(year:number,month:number){
   var monthDays = [31,isLeapYear(year)?29:28,31,30,31,30,31,31,30,31,30,31];
   return monthDays[month];
+}
+function formateDate(year:number, month:number, day:number, _minYear:number) {
+  let argsLen = arguments.length
+  let now = new Date()
+  year = argsLen ? parseInt(year+'',10) : now.getFullYear();
+  month = argsLen ? parseInt(month-1+'',10) : now.getMonth();
+  day = argsLen ? parseInt(day+'',10) || now.getDate() : now.getDate();
+  if(year < (_minYear?_minYear:minYear+1) || year > maxYear) {
+    return {
+      error:100,
+      msg: errorCode[100]
+    }
+  }
+  return { year, month, day}
+}
+/**
+ * 将公历转换为农历
+ * @param {Number} year,month,day 公历年，月，日
+ */
+function solarToLunar(_year:number, _month:number, _day:number) {
+  let inputDate = formateDate(_year, _month, _day, minYear)
+  if(inputDate.error) return inputDate
+  let{year, month, day} = inputDate
+
+  CacheUtil.setCurrent(year)
+  // 立春日期
+  
 }
 export default errorCode

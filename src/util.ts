@@ -1,18 +1,19 @@
 export default class CacheUtil {
   static current: any;
-  static setCurrent(key: any, value: any){
+  public cache: any = null
+  static setCurrent(key: any, value: any = ''){
     if(this.current)
   }
   get(key:string) {
-    if(!cache) cache = {}
-    return cache[key]
+    if(!this.cache) this.cache = {}
+    return this.cache[key]
   }
-  set(key:string, value:string) {
-    if(!cache) cache = {}
-    cache[key] = value
-    return cache[key]
+  set(key:string, value:string = '') {
+    if(!this.cache) this.cache = {}
+    this.cache[key] = value
+    return this.cache[key]
   }
   clear() {
-    cache = null
+    this.cache = null
   }
 }
