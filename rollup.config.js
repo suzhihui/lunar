@@ -1,8 +1,8 @@
 import typescript from 'rollup-plugin-typescript'
 export default {
-  input: 'src/main.ts',
+  input: 'src/calendar.ts',
   output: {
-    file: 'dist/bundle.js',
+    file: 'dist/calendar.min.js',
     format: 'umd',
     name: 'lunar'
   },
