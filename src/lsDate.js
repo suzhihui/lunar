@@ -52,7 +52,7 @@ var lsDate = function(ly,lm,ld) {
             return ((lunarInfo[i - 1900] & (65536 >> h)) ? 30 : 29);
         },
         newymd = function (m) {
-            var k, j = 0, h = 0, l = new Date(1900, 0, 31), n = (m - l) / 86400000;
+            var k, j = 0, h = 0, l = new Date(1900, 0, 31), n = Math.floor((m - l) / 86400000);
             this.dayCyl = n + 40;
             this.monCyl = 14;
             for (k = 1900; k < 2050 && n > 0; k++) {
@@ -138,7 +138,6 @@ var lsDate = function(ly,lm,ld) {
         this.shengxiao = Animals.charAt((this.lunarYear - 4) % 12);
         this.lunarMonth = X.month;
         this.lunarIsLeapMonth = X.isLeap;
-        this.lnongMonth = this.lunarIsLeapMonth ? "闰" + nStr3[X.month - 1] : nStr3[X.month - 1];
         this.lunarDate = X.day;
         this.showInLunar = this.lnongDate = lunarMD(this.lunarMonth, this.lunarDate);
         if (this.lunarDate == 1) {
@@ -169,7 +168,7 @@ var lsDate = function(ly,lm,ld) {
             }
         }
         this.showInLunar = (this.solarFestival == "") ? this.showInLunar : this.solarFestival;
-        this.lunarFestival = sFtv2[this.lunarIsLeapMonth ? "00" : digit(this.lunarMonth) + digit(this.lunarDate)];
+        this.lunarFestival = sFtv2[this.lunarIsLeapMonth ? "00" : digit(this.lunarMonth) + digit(Math.floor(this.lunarDate))];
         if (typeof this.lunarFestival == "undefined") {
             this.lunarFestival = "";
         } else {
