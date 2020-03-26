@@ -1,4 +1,3 @@
-const Calendar = require('../dist/calendar.min')
-
-let calendar = new Calendar({})
-console.log(calendar.getLunarCalendar(2013,2,10))
+const lsDate = require('../dist/calendar.min')
+console.log(lsDate)
+console.log(lsDate(2020,0,25))
