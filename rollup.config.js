@@ -1,4 +1,5 @@
 import typescript from 'rollup-plugin-typescript'
+import { uglify } from "rollup-plugin-uglify"
 export default {
   input: 'src/calendar.ts',
   output: {
@@ -7,6 +8,7 @@ export default {
     name: 'lunar'
   },
   plugins: [
-    typescript({lib: ["es5", "es6", "dom"], target: "es5"})
+    typescript({lib: ["es5", "es6", "dom"], target: "es5"}),
+    uglify()
   ]
 }
