@@ -33,19 +33,28 @@ export default class Calendar {
     },
     firstDay     : 1,
     weekendDays: [0, 6],
-    dateFormat: 'yyyy-mm-dd',
+    dateFormat: 'yyyy-mm-dd'
   }
   attrs:any
-  constructor(public options:any) {
+  firstWeek:number = 1
+  length:number = 0
+  constructor(public options:any, public solarMonth:number[]=[]) {
     //参数调整
     options = options || {};
     for (var prop in this.defaults) {
-        if (typeof options[prop] === 'undefined') {
-            options[prop] = this.defaults[prop];
-        }
+      if (typeof options[prop] === 'undefined') {
+        options[prop] = this.defaults[prop];
+      }
     }
+    this.solarMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
     this.attrs = options
   }
+  solarDays(y:any,m:any) {
+    if(m==1)
+        return(((y%4 == 0) && (y%100 != 0) || (y%400 == 0))? 29: 28);
+    else
+        return(this.solarMonth[m]);
+   }
   // 获取农历日期
   getLunarCalendar(year:number, month:number, day:number) {
     const monthName = ["正月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","腊月"]
@@ -67,7 +76,8 @@ export default class Calendar {
       "1223": "小年",
       "1230": "除夕"
     }
-    
+    const wFtv:string[] = ["0520 母亲节", "0630 父亲节", "1144 感恩节"]
+    debugger
     let differenceYear        :number = year - 1900;
     let solarTermSerialNumber :number = month * 2 - 1;
     let lunarCalendarMonth    :number = (month - 1 + 12) % 12;
@@ -84,7 +94,9 @@ export default class Calendar {
     let halfPrevSTAD          :number = this._getSolarTermAccumulateDate(differenceYear, solarTermSerialNumber - 1);
     let halfNextSTAD          :number = this._getSolarTermAccumulateDate(differenceYear, solarTermSerialNumber + 1);
     
-
+    let  firstDay             :any = new Date(`${year}-${month}-1`)
+    this.length = this.solarDays(year, month)
+    this.firstWeek = firstDay.getDay()
     // 调整月份
     if(accumulateDate < curSTAD && lunarDate + curSTAD - accumulateDate !== curSTLD)
       lunarCalendarMonth --;
@@ -117,15 +129,36 @@ export default class Calendar {
     let prefix = Math.floor((lunarDate - 1) / 10)
     let dataString: string = (lunarDate === 20 || lunarDate === 30) ? datePrefixName[prefix+1] : datePrefixName[prefix]
     dataString += dateName[lunarDate % 10]
+    
+    // 月周节日
+    wFtv.forEach(item => {
+      // ['0630 父亲节'] // 第3个周日
+      if(item.match(/^(\d{2})(\d)(\d)([\s\*])(.+)$/)){
+        if(Number(RegExp.$1) == (month)){
+          let tmp1 = Number(RegExp.$2) // 3
+          let tmp2 = Number(RegExp.$3) // 0
+          let _day:number = 0
+          if(tmp1<5) {
+            _day = ((this.firstWeek>tmp2)?7:0) + 7*(tmp1-1) + tmp2 - this.firstWeek
+          } else {
+            tmp1 -= 5;
+            let tmp3 = (this.firstWeek+this.length-1)%7; //当月最后一天星期?
+            _day = this.length - tmp3 - 7*tmp1 + tmp2 - (tmp2>tmp3?7:0) - 1
+          }
+          this.attrs.holiday[`${month}-${_day + 1}`] = RegExp.$5
+        }
+      }
+    })
 
     // 是否有公历节日：圣诞节 情人节之类的
     let holiday = this.attrs.holiday[`${(month) + '-' + day}`]
+
     return {
       month: monString,
       data: dataString,
-      solarTerm: solarTerm,
-      festival: festivalString,
-      holiday
+      jieqi: solarTerm,
+      lunarFestival: festivalString,
+      solarFestival:holiday
     }
   }
   // 计算某年某个节气日
