@@ -85,6 +85,7 @@ export default class Calendar {
     let festivalNumber        :string = ''
     
     let accumulateDate        :number = this._gregorianCalendarToAccumulateDate(year, month, day); 
+    console.log(accumulateDate, '日柱')
     let lunarDate             :number = this._getLunarDate(accumulateDate);
     let curSTLD               :number = this._getLunarDate(this._getSolarTermAccumulateDate(differenceYear, solarTermSerialNumber))
     let nextSTLD              :number = this._getLunarDate(this._getSolarTermAccumulateDate(differenceYear, solarTermSerialNumber + 2));
