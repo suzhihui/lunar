@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript'
 import { uglify } from "rollup-plugin-uglify"
 export default {
-  input: 'src/lsDate.js',
+  input: 'src/calendar.ts',
   output: {
     file: 'dist/calendar.min.js',
     format: 'umd',

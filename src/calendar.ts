@@ -77,7 +77,6 @@ export default class Calendar {
       "1230": "除夕"
     }
     const wFtv:string[] = ["0520 母亲节", "0630 父亲节", "1144 感恩节"]
-    debugger
     let differenceYear        :number = year - 1900;
     let solarTermSerialNumber :number = month * 2 - 1;
     let lunarCalendarMonth    :number = (month - 1 + 12) % 12;
@@ -85,8 +84,9 @@ export default class Calendar {
     let festivalNumber        :string = ''
     
     let accumulateDate        :number = this._gregorianCalendarToAccumulateDate(year, month, day); 
-    console.log(accumulateDate, '日柱')
+    // console.log(accumulateDate, '日柱')
     let lunarDate             :number = this._getLunarDate(accumulateDate);
+    // console.log(lunarDate, '日柱2')
     let curSTLD               :number = this._getLunarDate(this._getSolarTermAccumulateDate(differenceYear, solarTermSerialNumber))
     let nextSTLD              :number = this._getLunarDate(this._getSolarTermAccumulateDate(differenceYear, solarTermSerialNumber + 2));
 
@@ -168,11 +168,16 @@ export default class Calendar {
   }
   // 公历转化为积日
   _gregorianCalendarToAccumulateDate(year: number, month: number, day: number):number {
+      console.log('公历转化为积日', year, month, day)
     let accumulateDate = 0
     accumulateDate += (year - 1900) * 365
     accumulateDate += Math.floor((year - 1901) / 4)
     for(let eMon = month - 1; eMon > 0; eMon-- ) {
       accumulateDate += (new Date(year, eMon, 0)).getDate()
+      console.log('-----------', accumulateDate)
+    }
+    if([year, month].toString() == '2020,10') {
+        day++
     }
     accumulateDate += day
     return accumulateDate
